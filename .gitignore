@@ -1,0 +1,10 @@
+﻿API/.vscode
+API/com.debtcalculator.API/bin
+API/com.debtcalculator.API/obj
+API/com.debtcalculator.Config/bin
+API/com.debtcalculator.Config/obj
+API/com.debtcalculator.Data/bin
+API/com.debtcalculator.Data/obj
+API/com.debtcalculator.Domain/bin
+API/com.debtcalculator.Domain/obj
+API/com.debtcalculator.API/logs
