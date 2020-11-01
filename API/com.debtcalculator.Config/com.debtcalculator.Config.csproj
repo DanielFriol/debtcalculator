@@ -15,7 +15,6 @@
     <ProjectReference Include="..\com.debtcalculator.Data\com.debtcalculator.Data.csproj" />
     <ProjectReference Include="..\com.debtcalculator.Domain\com.debtcalculator.Domain.csproj" />
     <ProjectReference Include="..\com.debtcalculator.Services\com.debtcalculator.Services.csproj" />
-    <ProjectReference Include="..\com.debtcalculator.Tests\com.debtcalculator.Tests.csproj" />
   </ItemGroup>
 
 </Project>

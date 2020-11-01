@@ -1,3 +1,4 @@
+using com.debtcalculator.Services.Notification.Email;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ namespace com.debtcalculator.Config
             registerMediatr(services);
             registerData(services);
             registerObjects(services);
+            registerAppServices(services);
         }
 
         private static void registerMediatr(IServiceCollection services)
@@ -31,11 +33,19 @@ namespace com.debtcalculator.Config
         {
             services.AddScoped<Data.EF.DebtCalculatorDataContext>();
             services.AddTransient<Domain.Contracts.Infra.IUnitOfWork, Data.EF.UnitOfWorkEF>();
+
+            services.AddTransient<Domain.Contracts.Repositories.IUserReadRepository, Data.EF.Repositories.UserReadRepository>();
+            services.AddTransient<Domain.Contracts.Repositories.IUserWriteRepository, Data.EF.Repositories.UserWriteRepository>();
         }
 
         private static void registerObjects(IServiceCollection services)
         {
             services.AddScoped<Domain.DTOs.DadosSessaoDTO>();
+        }
+
+        private static void registerAppServices(IServiceCollection services)
+        {
+            services.AddTransient<Domain.Contracts.Infra.Services.ISendEmailService, SendEmailService>();
         }
     }
 }

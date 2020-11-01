@@ -25,8 +25,7 @@ namespace com.debtcalculator.Data.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-
+            modelBuilder.ApplyConfiguration(new Maps.UserMap());
         }
 
         public async override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))

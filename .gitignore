@@ -8,3 +8,5 @@ API/com.debtcalculator.Data/obj
 API/com.debtcalculator.Domain/bin
 API/com.debtcalculator.Domain/obj
 API/com.debtcalculator.API/logs
+API/com.debtcalculator.Services/obj
+API/com.debtcalculator.Services/bin
