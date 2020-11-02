@@ -5,6 +5,7 @@ namespace com.debtcalculator.API.Models
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public string CPF { get; set; }
         public string Email { get; set; }
         public long IdProfile { get; set; }
     }
@@ -18,6 +19,7 @@ namespace com.debtcalculator.API.Models
             {
                 Id = user.Id,
                 Name = user.Name,
+                CPF = user.CPF,
                 Email = user.Email,
                 IdProfile = user.IdProfile
             };

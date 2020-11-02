@@ -27,8 +27,11 @@ namespace com.debtcalculator.Domain.Mediator.User.Add
         {
             if (await this._userReadRepository.GetByEmailAsync(request.Email) != null)
                 return new Response().AddError("Email already registered");
-
-            var user = new Domain.Entities.User(request.Name, request.Email, (int)UserProfile.User, request.Password);
+            
+            if(await this._userReadRepository.GetByCPFAsync(request.CPF) != null )
+              return new Response().AddError("CPF already registered");
+            
+            var user = new Domain.Entities.User(request.Name, request.Email, request.CPF, (int)UserProfile.User, request.Password);
 
             _userWriteRepository.Add(user);
             await _uow.CommitAsync();

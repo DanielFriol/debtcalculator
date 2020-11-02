@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using com.debtcalculator.API.Models;
 using com.debtcalculator.Domain.Contracts.Repositories;
 using com.debtcalculator.Domain.DTOs;
+using com.debtcalculator.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -45,6 +46,8 @@ namespace com.debtcalculator.API.Controllers
         /// <summary>
         /// Lista todos os usuários paginados.
         /// </summary>
+        /// <param name="skip"></param>
+        /// <param name="take"></param>
         /// <returns>Uma lista de usuarios</returns>
         /// <response code="200">Usuários retornardos com sucesso</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -70,6 +73,7 @@ namespace com.debtcalculator.API.Controllers
         ///     {
         ///         "name": "string"
         ///         "email": "string",
+        ///         "cpf": "string",
         ///         "password": "string"
         ///     }
         /// </remarks>
@@ -80,6 +84,7 @@ namespace com.debtcalculator.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Post([FromBody] Domain.Mediator.User.Add.Request request)
         {
             var response = await _mediator.Send(request).ConfigureAwait(false);
@@ -113,8 +118,8 @@ namespace com.debtcalculator.API.Controllers
         [HttpPost("Admin")]
         public async Task<IActionResult> PostAdmin([FromBody] Domain.Mediator.User.AddAdmin.Request request)
         {
-            if (int.Parse(_dadosSessao.DadosDoUsuario.UsuarioId) == 2)
-                return BadRequest("User must administrator to add administrator");
+            if (_dadosSessao.DadosDoUsuario.IdProfile == (int)UserProfile.User)
+                return Unauthorized("User must administrator to add administrator");
 
             var response = await _mediator.Send(request).ConfigureAwait(false);
 
@@ -238,7 +243,7 @@ namespace com.debtcalculator.API.Controllers
         /// </summary>
         /// <param name="id">id do usuário a ser excluido</param>
         /// <returns>Usuário excluido</returns>
-        /// <response code="200">Usuário excluido</response>
+        /// <response code="200"></response>
         /// <response code="400">Caso o id seja nulo ou não inexistente</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -36,6 +36,9 @@ namespace com.debtcalculator.Config
 
             services.AddTransient<Domain.Contracts.Repositories.IUserReadRepository, Data.EF.Repositories.UserReadRepository>();
             services.AddTransient<Domain.Contracts.Repositories.IUserWriteRepository, Data.EF.Repositories.UserWriteRepository>();
+
+            services.AddTransient<Domain.Contracts.Repositories.IDebtReadRepository, Data.EF.Repositories.DebtReadRepository>();
+            services.AddTransient<Domain.Contracts.Repositories.IDebtWriteRepository, Data.EF.Repositories.DebtWriteRepository>();
         }
 
         private static void registerObjects(IServiceCollection services)

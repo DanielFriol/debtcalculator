@@ -8,10 +8,11 @@ namespace com.debtcalculator.Domain.Entities
     {
         protected User() { }
 
-        public User(string name, string email, int idProfile, string password)
+        public User(string name, string email, string cpf, int idProfile, string password)
         {
             Name = name;
             Email = email;
+            CPF = cpf;
             IdProfile = idProfile;
             Salt = StringHelper.GenerateRandomSalt();
             Password = password.Encrypt(Salt);
@@ -19,6 +20,7 @@ namespace com.debtcalculator.Domain.Entities
 
         public string Name { get; set; }
         public string Email { get; set; }
+        public string CPF { get; set; }
         public int IdProfile { get; set; }
         public string Password { get; set; }
         public string Salt { get; set; }

@@ -7,6 +7,8 @@ namespace com.debtcalculator.Domain.Contracts.Repositories
     public interface IUserReadRepository : IReadRepository<User>
     {
         Task<User> GetByEmailAsync(string email);
+        Task<User> GetByCPFAsync(string cpf);
+
         Task<IEnumerable<User>> GetAsync();
         Task<IEnumerable<User>> GetAsyncPaginated(int skip, int take);
         Task<User> GetAsync(long id);

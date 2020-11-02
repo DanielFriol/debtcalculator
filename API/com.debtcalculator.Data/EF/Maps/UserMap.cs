@@ -19,7 +19,9 @@ namespace com.debtcalculator.Data.EF.Maps
             builder.Property(p => p.Password).HasColumnType("varchar(120)");
             builder.Property(p => p.ChangePasswordCode).HasColumnType("varchar(120)");
             builder.Property(p => p.Salt).HasColumnType("varchar(150)");
-            builder.Property(p => p.CodeExpiration).HasColumnType("datetime");
+            builder.Property(p => p.CodeExpiration).HasColumnType("date");
+            builder.Property(p => p.CPF).HasColumnType("varchar(11)");
+
             
         }
     }

@@ -40,6 +40,11 @@ namespace com.debtcalculator.Data.EF.Repositories
             return await _db.FirstOrDefaultAsync(x => x.ChangePasswordCode == changePasswordCode.Encrypt(x.Salt));
         }
 
+        public async Task<User> GetByCPFAsync(string cpf)
+        {
+            return await _db.FirstOrDefaultAsync(x=> x.CPF == cpf);
+        }
+
         public async Task<User> GetByEmailAsync(string email)
         {
             return await _db.FirstOrDefaultAsync(x => x.Email == email);
