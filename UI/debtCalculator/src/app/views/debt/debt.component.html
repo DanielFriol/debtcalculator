@@ -7,7 +7,7 @@
     (click)="get(0,10)">
     <fa-icon [icon]="faRedo"></fa-icon>
   </button>
-  <div *ngIf="!isAdmin() && !debts.lenght == 0">
+  <div *ngIf="!isAdmin() && total == 0">
     <h4 class="mb-3">Nenhuma dívida cadastrada para o seu CPF!</h4>
   </div>
   <div *ngIf="isAdmin() || debts.length >= 1">

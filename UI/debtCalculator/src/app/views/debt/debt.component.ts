@@ -96,6 +96,7 @@ export class DebtComponent implements OnInit {
 
 
   async get(skip, take) {
+    this.total = 0;
     if (this.isAdmin())
       await this.getAll(skip, take);
     else

@@ -9,11 +9,7 @@ import { MainModule } from './views/main/main.module';
 import { HomeModule } from './views/home/home.module';
 import { LoginModule } from './views/login/login.module';
 import { ToastrModule } from 'ngx-toastr';
-import { UserComponent } from './views/user/user.component';
-import { UserModule } from './views/user/user.module';
-import { DebtComponent } from './views/debt/debt.component';
 import { DebtModule } from './views/debt/debt.module';
-import { SignupModule } from './views/signup/signup.module';
 
 @NgModule({
   declarations: [
@@ -31,7 +27,6 @@ import { SignupModule } from './views/signup/signup.module';
     HomeModule,
     TabsModule.forRoot(),
     DebtModule,
-    SignupModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

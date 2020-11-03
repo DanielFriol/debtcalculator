@@ -41,10 +41,6 @@ const routes: Routes = [
       },
     ],
   },
-  {
-    path: 'signup',
-    loadChildren: () => import('./views/signup/signup.module').then(m => m.SignupModule)
-  },
   { path: '**', redirectTo: 'home' }
 ];
 

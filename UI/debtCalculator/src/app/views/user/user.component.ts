@@ -32,6 +32,7 @@ export class UserComponent implements OnInit {
 
 
   async getAllUsers(skip, take) {
+    this.total = 0;
     await this.service.getUsersPaginated(skip, take).then((result: UserPaginationModel) => {
       this.users = result.data;
       this.total = result.total;
