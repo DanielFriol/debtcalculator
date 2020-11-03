@@ -1,0 +1,27 @@
+<app-loading [statusLoading]></app-loading>
+<div class="app-body">
+  <div class="container">
+    <h2>Login</h2>
+    <div>
+      <form [formGroup]="loginForm" (ngSubmit)="autenticar()">
+        <div class="form-group">
+          <label for="username">Email</label>
+          <input type="text" formControlName="email" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+        </div>
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" formControlName="password" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+        </div>
+        <div class="form-group">
+          <button [disabled]="loginForm.invalid" class="btn btn-primary">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Login
+          </button>
+          <a routerLink="/signup" class="btn btn-link">Cadastrar-se</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

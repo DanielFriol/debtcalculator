@@ -63,7 +63,7 @@ namespace com.debtcalculator.API.Controllers
         /// <returns>Uma lista de dividas</returns>
         /// <response code="200">Divida retornarda com sucesso</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [HttpGet("/GetDebtInfo/{debtId}")]
+        [HttpGet("GetDebtInfo/{debtId}")]
         public async Task<IActionResult> GetAllPaginated(long debtId)
         {
 
@@ -138,6 +138,10 @@ namespace com.debtcalculator.API.Controllers
         ///         "value": 0,
         ///         "dueDate": "2020-03-01",
         ///         "contactPhone": "string"
+        ///         "maxSplit": 0,
+        ///         "interestType": 0,
+        ///         "interest": 0,
+        ///         "paschoalottoPercentage": 0
         ///     }
         /// </remarks>
         /// <param name="request"></param>
@@ -161,6 +165,41 @@ namespace com.debtcalculator.API.Controllers
             return Ok(result.ToVMSimple());
         }
 
+
+        /// <summary>
+        /// Edita configuração de uma divida.
+        /// </summary>
+        /// <remarks>
+        /// Exemplo de requisição:
+        ///     POST
+        ///     {
+        ///         "maxSplit": 0,
+        ///         "interestType": 0,
+        ///         "interest": 0,
+        ///         "paschoalottoPercentage": 0
+        ///     }
+        /// </remarks>
+        /// <param name="request"></param>
+        /// <returns>Divida configurada</returns>
+        /// <response code="200">Retorna a divida configurada</response>
+        /// <response code="400">Caso o request seja inválido ou seja nulo</response>
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] Domain.Mediator.Debt.UpdateConfig.Request request)
+        {
+            var response = await _mediator.Send(request).ConfigureAwait(false);
+
+            if (response.Errors.Any())
+            {
+                return BadRequest(response.Errors);
+            }
+
+            var result = response.Result as Domain.Entities.Debt;
+
+            return Ok(result.ToVMSimple());
+        }
+
         /// <summary>
         /// Finaliza uma dívida
         /// </summary>
@@ -171,15 +210,17 @@ namespace com.debtcalculator.API.Controllers
         ///         "id": "string"
         ///     }
         /// </remarks>
-        /// <param name="request"></param>
+        /// <param name="id"></param>
         /// <returns>Nova divida</returns>
         /// <response code="200"></response>
         /// <response code="400">Caso o request seja inválido ou seja nulo</response>
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] Domain.Mediator.Debt.Delete.Request request)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(long id)
         {
+            var request = new Domain.Mediator.Debt.Delete.Request();
+            request.Id = id;
             var response = await _mediator.Send(request).ConfigureAwait(false);
 
             if (response.Errors.Any())

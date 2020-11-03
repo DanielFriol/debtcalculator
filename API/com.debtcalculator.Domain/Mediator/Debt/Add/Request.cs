@@ -5,7 +5,7 @@ namespace com.debtcalculator.Domain.Mediator.Debt.Add
 {
     public class Request : IRequest<Response>
     {
-        public string CLientCPF { get; set; }
+        public string ClientCPF { get; set; }
         public float Value { get; set; }
         public DateTime DueDate { get; set; }
         public string ContactPhone { get; set; }

@@ -1,0 +1,54 @@
+<app-loading [statusLoading]></app-loading>
+<div class="app-body">
+  <div class="container">
+    <form [formGroup]="registerForm">
+      <div class="form-group">
+        <label for="name">Nome:</label>
+        <input type="text" formControlName="name" class="form-control" />
+        <span class="help-block text-danger" *ngIf="!registerForm.controls['name'].value">
+          O campo Nome é obrigatório!</span>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="text" formControlName="email" class="form-control" />
+        <span class="help-block text-danger" *ngIf="!registerForm.controls['email'].value">
+          O campo Email é obrigatório!</span>
+        <span class="help-block text-danger"
+          *ngIf="registerForm.controls['email'].value && !registerForm.controls['email'].valid">
+          Email inválido!</span>
+      </div>
+      <div class="form-group">
+        <label for="cpf">CPF:</label>
+        <input [showMaskTyped]="true" mask="000.000.000-00" type="text" formControlName="cpf" class="form-control" />
+        <span class="help-block text-danger" *ngIf="!registerForm.controls['cpf'].value">
+          O campo CPF é obrigatório!</span>
+        <span class="help-block text-danger"
+          *ngIf="registerForm.controls['cpf'].value && !registerForm.controls['cpf'].valid ">
+          CPF inválido!</span>
+      </div>
+      <div class="form-group">
+        <label for="password">Senha:</label>
+        <input type="password" formControlName="password" class="form-control" />
+        <span class="help-block text-danger" *ngIf="!registerForm.controls['password'].value">
+          O campo Senha é obrigatório!</span>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar a senha:</label>
+        <input type="password" formControlName="confirmPassword" class="form-control" />
+        <span class="help-block text-danger" *ngIf="!registerForm.controls['confirmPassword'].value">
+          O campo Confirmar Senha é obrigatório!</span>
+        <span class="help-block text-danger"
+          *ngIf="registerForm.controls['confirmPassword'].value && registerForm.errors?.invalid">
+          Senhas não conferem!</span>
+      </div>
+      <div class="form-group">
+        <button [disabled]="registerForm.invalid" (click)="register()" class="btn btn-primary">
+          Cadastrar
+        </button>
+        <button style="margin-left: 1.5rem;" routerLink="/login" class="btn btn-secondary">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

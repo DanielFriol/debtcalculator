@@ -19,7 +19,7 @@ namespace com.debtcalculator.Domain.Mediator.Debt.Add
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            var debt = new Domain.Entities.Debt(request.CLientCPF, request.Value, request.DueDate, request.ContactPhone, request.MaxSplit, request.InterestType, request.Interest, request.PaschoalottoPercentage);
+            var debt = new Domain.Entities.Debt(request.ClientCPF, request.Value, request.DueDate, request.ContactPhone, request.MaxSplit, request.InterestType, request.Interest, request.PaschoalottoPercentage);
 
             _debtWriteRepository.Add(debt);
 

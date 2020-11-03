@@ -1,0 +1,39 @@
+<div *ngIf="!isAdmin()">
+  <h4 class="mb-3">Sem autorização para acessar esta pagina!</h4>
+</div>
+
+<div *ngIf="isAdmin()" class="container">
+  <table class="table">
+    <thead>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Perfil</th>
+      <th></th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{user.name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.idProfile == 1 ? 'Admin' : 'Usuário' }}</td>
+        <td>
+          <button *ngIf="user.idProfile == 2" class="btn btn-primary btn-sm" (click)="makeAdmin(user.id)">
+            Transformar em Admin
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="justify-content-center" style="text-align: center">
+    <pagination-component [totalItens]="total" [exibeSelecaoItens]="true"
+      (carregarItens)="getAllUsers($event.skip, $event.take)">
+    </pagination-component>
+  </div>
+</div>
+
+
+<p-confirmDialog #cd header="Confirmar" icon="pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" pButton icon="pi pi-times" label="Não" (click)="cd.reject()"></button>
+    <button type="button" pButton icon="pi pi-check" label="Sim" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

@@ -1,0 +1,119 @@
+<nav class="navbar navbar-default fixed-top bg-dark flex-md-nowrap p-0">
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0 text-secondary" [routerLink]="['/home']">
+    <h4 style="color: aliceblue;">Calculador de dívida</h4>
+  </a>
+  <ul class="nav navbar-top-links navbar-right">
+    <div class="pipe-divider">&nbsp;</div>
+    <div class="d-inline-block col-sm-3 col-md-2" #dropUser="ngbDropdown" ngbDropdown autoClose="outside"
+      display="dynamic">
+      <button class="text-white bg-dark btn" id="dropDownUser" ngbDropdownToggle>
+        Olá, <strong>{{ user.name }}</strong>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownManual">
+        <button ngbDropdownItem class="pl-3 pr-3" (click)="changePassword()">
+          <fa-icon [icon]="faUser" class="mr-1"></fa-icon> Alterar senha
+        </button>
+        <hr class="my-1 p-0">
+        <button ngbDropdownItem class="pl-3 pr-3" (click)="logout()">
+          <fa-icon [icon]="faSignOutAlt" class="mr-1"></fa-icon> Sair
+        </button>
+      </div>
+    </div>
+  </ul>
+  <div class="navbar-top-links-sm container row">
+    <div class="col-4">
+      <div class="d-inline-block col-sm-3 col-md-2 float-right" #dropUser="ngbDropdown" ngbDropdown autoClose="outside"
+        display="dynamic">
+        <button class="text-white bg-dark btn" id="dropDownUser" ngbDropdownToggle>
+          Olá, <strong>{{ user.name }}</strong>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropdownManual">
+          <button ngbDropdownItem class="pl-3 pr-3" (click)="changePassword()">
+            <fa-icon [icon]="faUser" class="mr-1"></fa-icon> Alterar senha
+          </button>
+          <hr class="my-1 p-0">
+          <button ngbDropdownItem class="pl-3 pr-3" (click)="logout()">
+            <fa-icon [icon]="faSignOutAlt" class="mr-1"></fa-icon> Sair
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="d-inline-block col-sm-3 col-md-2" ngbDropdown #dropMenu="ngbDropdown" display="dynamic">
+        <button class="text-white bg-dark btn mt-2" ngbDropdownAnchor
+          (click)="$event.stopPropagation(); dropMenu.open();">
+          <fa-icon [icon]="faBars" style="font-size: 20px;"></fa-icon>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="dropDownMenu">
+          <div *ngFor="let item of navItems">
+            <a ngbDropdownItem id="nav-link" class="nav-link" [routerLink]="item.route" routerLinkActive="active"
+              *ngIf="(!item.children || item.children.length == 0) && hasAdminAccess(item)">
+              <fa-icon [icon]="item.icon"></fa-icon>
+              <span class="ml-2">{{ item.name }}</span>
+            </a>
+            <a class="nav-link" (click)="item.collapse = !item.collapse" id="nav-link"
+              [attr.aria-expanded]="item.collapse"
+              *ngIf="(item.children && item.children.length > 0) && hasAdminAccess(item)">
+              <fa-icon [icon]="item.icon"></fa-icon>
+              <span class="ml-2">{{ item.name }}</span>
+              <fa-icon [icon]="faArrowLeft" *ngIf="item.collapse" class="float-right"></fa-icon>
+              <fa-icon [icon]="faArrowDown" *ngIf="!item.collapse" class="float-right"></fa-icon>
+            </a>
+            <div id="collapseExample" [ngbCollapse]="item.collapse">
+              <div *ngFor="let child of item.children">
+                <a *ngIf="hasAdminAccess(child)" ngbDropdownItem id="nav-link" class="nav-link ml-2"
+                  [routerLink]="child.route" routerLinkActive="active">
+                  <fa-icon [icon]="child.icon"></fa-icon>
+                  <span class="ml-2">{{ child.name }}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="container-fluid">
+  <nav class="sidebar navbar-collapse">
+    <div class="sidebar-sticky">
+      <ul class="nav flex-column">
+        <div *ngFor="let item of navItems">
+          <li class="nav-item" *ngIf="(!item.children || item.children.length == 0) && hasAdminAccess(item)">
+            <a ngbDropdownItem class="nav-link text-white" [routerLink]="item.route" routerLinkActive="active">
+              <fa-icon [icon]="item.icon"></fa-icon>
+              <span class="ml-2">{{ item.name }}</span>
+            </a>
+          </li>
+          <li class="nav-item" ngbDropdown *ngIf="(item.children && item.children.length > 0) && hasAdminAccess(item)">
+            <a class="nav-link text-white" (click)="item.collapse = !item.collapse" style="cursor: pointer;">
+              <fa-icon [icon]="item.icon"></fa-icon>
+              <span class="ml-2">{{ item.name }}</span>
+              <fa-icon [icon]="faArrowLeft" *ngIf="item.collapse" class="float-right"></fa-icon>
+              <fa-icon [icon]="faArrowDown" *ngIf="!item.collapse" class="float-right"></fa-icon>
+            </a>
+            <div id="collapseExample" [ngbCollapse]="item.collapse">
+              <div *ngFor="let child of item.children">
+                <a ngbDropdownItem class="nav-link text-white ml-2" *ngIf="hasAdminAccess(child)"
+                  [routerLink]="child.route" routerLinkActive="active">
+                  <fa-icon [icon]="child.icon"></fa-icon>
+                  <span class="ml-2">{{ child.name }}</span>
+                </a>
+              </div>
+            </div>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </nav>
+  <main id="main" role="main" class="mb-1" style="height: 100%;">
+    <app-loading [statusLoading]></app-loading>
+    <!-- <p-breadcrumb [model]="items" [home]="home"></p-breadcrumb> -->
+    <div id="page-wrapper">
+      <div class="mt-3 ml-3 pr-3">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <div class="push"></div>
+  </main>
+</div>

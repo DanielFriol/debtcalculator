@@ -1,0 +1,239 @@
+<div class="container">
+  <button pTooltip="Adicionar dívida" tooltipPosition="bottom" *ngIf="isAdmin()"
+    class="btn btn-success btn-sm mb-2 float-right" (click)="showAddDialog()">
+    <fa-icon [icon]="faPlus"></fa-icon>
+  </button>
+  <button pTooltip="Atualizar" tooltipPosition="bottom" class="btn btn-primary btn-sm mb-2 mr-2 float-right"
+    (click)="get(0,10)">
+    <fa-icon [icon]="faRedo"></fa-icon>
+  </button>
+  <div *ngIf="!isAdmin() && !debts.lenght == 0">
+    <h4 class="mb-3">Nenhuma dívida cadastrada para o seu CPF!</h4>
+  </div>
+  <div *ngIf="isAdmin() || debts.length >= 1">
+    <table class="table">
+      <thead>
+        <th *ngIf="isAdmin()">CPF do Cliente</th>
+        <th>Valor</th>
+        <th>Data Vencimento</th>
+        <th>Max. Parcelas</th>
+        <th>Juros</th>
+        <th *ngIf="isAdmin()">Comissão Paschoalotto</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let debt of debts">
+          <td *ngIf="isAdmin()">{{debt.clientCPF | mask: '000.000.000-00' }}</td>
+          <td>{{debt.value}}</td>
+          <td>{{debt.dueDate | date: 'dd/MM/yyyy'}}</td>
+          <td>{{debt.maxSplit}}</td>
+          <td>{{debt.interestType == 1 ? 'Simples' : 'Composto' }}, {{debt.interest}}% dia</td>
+          <td *ngIf="isAdmin()">{{debt.paschoalottoPercentage}}%</td>
+          <td>
+            <button pTooltip="Visualizar informações" (click)="viewInfo(debt.id)" tooltipPosition="top"
+              class="btn btn-primary btn-sm">
+              <fa-icon [icon]="faEye"></fa-icon>
+            </button>
+            <button pTooltip="Editar configuração" tooltipPosition="top" *ngIf="isAdmin() && !debt.finalized"
+              (click)="showEditDialog(debt.id)" class="btn btn-secondary btn-sm ml-2">
+              <fa-icon [icon]="faCog"></fa-icon>
+            </button>
+            <button pTooltip="Finalizar" (click)="finalize(debt.id)" tooltipPosition="top"
+              *ngIf="isAdmin() && !debt.finalized" class="btn btn-danger btn-sm ml-2">
+              <fa-icon [icon]="faMinusCircle"></fa-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="justify-content-center" style="text-align: center">
+      <pagination-component [totalItens]="total" [exibeSelecaoItens]="true"
+        (carregarItens)="get($event.skip, $event.take)">
+      </pagination-component>
+    </div>
+  </div>
+</div>
+
+<p-dialog [style]="{width: '50vw'}" header="Adicionar dívida" [(visible)]="addDialog">
+  <form [formGroup]="addDebtForm">
+    <div class="form-group">
+      <label for="username">CPF do cliente:</label>
+      <input type="text" mask="000.000.000-00" [showMaskTyped]="true" formControlName="clientCPF"
+        class="form-control" />
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['clientCPF'].value">
+        O campo é obrigatório!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Valor:</label>
+      <input type="number" min="0" formControlName="value" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['value'].value">
+        O campo é obrigatório!</span>
+      <span class="help-block text-danger"
+        *ngIf="addDebtForm.controls['value'].value && !addDebtForm.controls['value'].valid">
+        Valor inválido!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Data de vencimento:</label>
+      <input type="date" formControlName="dueDate" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['dueDate'].value">
+        O campo é obrigatório!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Telefone para contato:</label>
+      <input type="text" mask="(00) 0000-0000" [showMaskTyped]="true" formControlName="contactPhone"
+        class="form-control" />
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['contactPhone'].value">
+        O campo é obrigatório!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Quantidade máxima de parcelas:</label>
+      <input type="number" min="1" formControlName="maxSplit" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['maxSplit'].value">
+        O campo é obrigatório!</span>
+      <span class="help-block text-danger"
+        *ngIf="addDebtForm.controls['maxSplit'].value && !addDebtForm.controls['maxSplit'].valid">
+        Valor inválido!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Tipo de juos:</label>
+      <select class="form-control" formControlName="interestType" id="exampleFormControlSelect1">
+        <option value="">Selecione...</option>
+        <option value="1">Simples</option>
+        <option value="2">Composto</option>
+      </select>
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['interestType'].value">
+        O campo é obrigatório!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Porcentagem de juros ao dia:</label>
+      <input type="number" min="0" step="0.1" formControlName="interest" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['interest'].value">
+        O campo é obrigatório!</span>
+      <span class="help-block text-danger"
+        *ngIf="addDebtForm.controls['interest'].value && !addDebtForm.controls['interest'].valid">
+        Valor inválido!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Porcentagem da comissão:</label>
+      <input type="number" min="0" formControlName="paschoalottoPercentage" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!addDebtForm.controls['paschoalottoPercentage'].value">
+        O campo é obrigatório!</span>
+      <span class="help-block text-danger"
+        *ngIf="addDebtForm.controls['paschoalottoPercentage'].value && !addDebtForm.controls['paschoalottoPercentage'].valid">
+        Valor inválido!</span>
+    </div>
+  </form>
+  <p-footer>
+    <button [disabled]="!addDebtForm.valid" (click)="addDebt()" class="btn btn-success mr-2">
+      <fa-icon [icon]="faCheck"></fa-icon> Salvar
+    </button>
+    <button (click)="addDialog = false" class="btn btn-secondary">
+      <fa-icon [icon]="faTimes"></fa-icon> Cancelar
+    </button>
+  </p-footer>
+</p-dialog>
+
+<p-dialog header="Editar configuração" [(visible)]="editDialog">
+  <form [formGroup]="editConfigForm">
+    <div class="form-group">
+      <label for="username">Quantidade máxima de parcelas:</label>
+      <input type="number" min="1" formControlName="maxSplit" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!editConfigForm.controls['maxSplit'].value">
+        O campo é obrigatório!</span>
+      <span class="help-block text-danger"
+        *ngIf="editConfigForm.controls['maxSplit'].value && !editConfigForm.controls['maxSplit'].valid">
+        Valor inválido!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Tipo de juos:</label>
+      <select class="form-control" formControlName="interestType" id="exampleFormControlSelect1">
+        <option value="1">Simples</option>
+        <option value="2">Composto</option>
+      </select>
+      <span class="help-block text-danger" *ngIf="!editConfigForm.controls['interestType'].value">
+        O campo é obrigatório!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Porcentagem de juros ao dia:</label>
+      <input type="number" min="0" step="0.1" formControlName="interest" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!editConfigForm.controls['interest'].value">
+        O campo é obrigatório!</span>
+      <span class="help-block text-danger"
+        *ngIf="editConfigForm.controls['interest'].value && !editConfigForm.controls['interest'].valid">
+        Valor inválido!</span>
+    </div>
+    <div class="form-group">
+      <label for="username">Porcentagem da comissão:</label>
+      <input type="number" min="0" formControlName="paschoalottoPercentage" class="form-control" />
+      <span class="help-block text-danger" *ngIf="!editConfigForm.controls['paschoalottoPercentage'].value">
+        O campo é obrigatório!</span>
+      <span class="help-block text-danger"
+        *ngIf="editConfigForm.controls['paschoalottoPercentage'].value && !editConfigForm.controls['paschoalottoPercentage'].valid">
+        Valor inválido!</span>
+    </div>
+  </form>
+  <p-footer>
+    <button [disabled]="!editConfigForm.valid" (click)="saveConfig()" class="btn btn-success mr-2">
+      <fa-icon [icon]="faCheck"></fa-icon> Salvar
+    </button>
+    <button (click)="editDialog = false" class="btn btn-secondary">
+      <fa-icon [icon]="faTimes"></fa-icon> Cancelar
+    </button>
+  </p-footer>
+</p-dialog>
+
+
+<p-dialog header="Informações da dívida" [(visible)]="viewDialog">
+  <div class="container">
+    <div>
+      <span>
+        <b>Data de Vencimento:</b> {{debtInfo.dueDate | date: 'dd/MM/yyyy'}}
+      </span>
+    </div>
+    <div>
+      <span>
+        <b>Dias em atraso:</b> {{debtInfo.daysLate}}
+      </span>
+    </div>
+    <div>
+      <span>
+        <b>Valor original:</b> {{addThousandPoint(debtInfo.originalValue)}}
+      </span>
+    </div>
+    <div>
+      <span>
+        <b>Valor do juros:</b> {{addThousandPoint(debtInfo.interestValue)}}
+      </span>
+    </div>
+    <div>
+      <span>
+        <b>Valor final:</b> {{addThousandPoint(debtInfo.finalValue)}}
+      </span>
+    </div>
+    <div>
+      <span>
+        <b>Valor final de cada parcela:</b>
+        <div>
+          <ul *ngFor="let split of debtInfo.plotsValue;  let i=index">
+            {{i+1}} - R${{addThousandPoint(split.value)}} - Data Vencimento: {{split.dueDate | date: 'dd/MM/yyyy' }}
+          </ul>
+        </div>
+      </span>
+    </div>
+    <div>
+      <span>
+        <b>Telefone de orientação para ligar e negociar com um colaborador:</b>
+        {{debtInfo.contactPhone | mask : '(00) 0000-0000'}}
+      </span>
+    </div>
+  </div>
+</p-dialog>
+
+
+<p-confirmDialog #cd header="Confirmar" icon="pi pi-exclamation-triangle">
+  <p-footer>
+    <button type="button" class="btn btn-secondary" pButton icon="pi pi-times" label="Não"
+      (click)="cd.reject()"></button>
+    <button type="button" class="btn btn-danger" pButton icon="pi pi-check" label="Sim" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

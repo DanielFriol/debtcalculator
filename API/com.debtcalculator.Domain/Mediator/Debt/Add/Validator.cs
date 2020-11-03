@@ -6,7 +6,7 @@ namespace com.debtcalculator.Domain.Mediator.Debt.Add
     {
         public Validator()
         {
-            RuleFor(x => x.CLientCPF)
+            RuleFor(x => x.ClientCPF)
             .NotEmpty().WithMessage("Missing property CPF")
             .MinimumLength(11).WithMessage("CPF must have 11 characters").MaximumLength(11).WithMessage("CPF must have 11 characters");
 

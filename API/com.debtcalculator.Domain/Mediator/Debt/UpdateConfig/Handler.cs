@@ -21,7 +21,7 @@ namespace com.debtcalculator.Domain.Mediator.Debt.UpdateConfig
 
         public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
         {
-            var debt = await _debtReadRepository.GetAsync(request.DebtId);
+            var debt = await _debtReadRepository.GetAsync(request.Id);
             if (debt == null)
                 return new Response().AddError("Debt not found");
 
